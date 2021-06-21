@@ -21,17 +21,20 @@ DEFAULT_HEADERS = {
     "content-type": "application/json;charset=UTF-8",
     "dnt": "1",
     "pragma": "no-cache",
-    'user-agent': random.choice(USERAGENT_LST)
+    "user-agent": random.choice(USERAGENT_LST),
+    "referer": "https://webui.mybti.cn/",
+    "origin": "https://webui.mybti.cn",
 }
 
 STATION_MAP = {
-    '1': '沙河站',
-    '2': '天通苑站',
-    '3': '草房站'
+    '1': {'station_name': '沙河站', 'line_name': '昌平线'},
+    '2': {'station_name': '天通苑站', 'line_name': '5号线'},
+    '3': {'station_name': '草房站', 'line_name': '6号线'}
 }
 
 URL_MAP = {
     'GetSystemTime': 'https://webapi.mybti.cn/Home/GetSystemTime',
     'GetBalance': 'https://webapi.mybti.cn/Appointment/GetBalance',
-    'GetAppointmentList': 'https://webapi.mybti.cn/AppointmentRecord/GetAppointmentList?status=0&lastid='
+    'GetAppointmentList': 'https://webapi.mybti.cn/AppointmentRecord/GetAppointmentList?status=0&lastid=',
+    'CreateAppointment': 'https://webapi.mybti.cn/Appointment/CreateAppointment',
 }
