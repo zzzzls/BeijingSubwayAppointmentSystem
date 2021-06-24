@@ -17,14 +17,17 @@ import asyncio
 
 class TicketSecKill:
     def __init__(self):
+        param = sys.argv[1:]
         # authorization = input('请输入您的authorization:')
-        authorization = 'NWYzZWE4MWYtMDk1MS00Njc3LThlZDAtNzk4MDM3ZTMwM2VkLDE2MjQ2NDMyNTA2MjUsTSthNEJqQVhzUWQ1YUdBc0M0bHo4KzBKaXBBPQ=='
+        ts = param[0]
+        authorization = param[1]
+        # authorization = 'NWYzZWE4MWYtMDk1MS00Njc3LThlZDAtNzk4MDM3ZTMwM2VkLDE2MjQ2NDMyNTA2MjUsTSthNEJqQVhzUWQ1YUdBc0M0bHo4KzBKaXBBPQ=='
         self.headers = DEFAULT_HEADERS.copy()
         self.headers['authorization'] = authorization
         self.client = httpx.Client(headers=self.headers)
         self.station, self.route_line = self.choice_station()
         self.seckill_date = self.choice_date()
-        self.time_slot = self._get_time_solt('07:25')
+        self.time_slot = self._get_time_solt(ts)
 
     def __del__(self):
         self.client.close()
@@ -32,7 +35,7 @@ class TicketSecKill:
     def choice_station(self):
         """选择预约站点"""
         # station_num = input('请输入站点编号 ==> 1、沙河站  2、天通苑站  3、草房站 : ')
-        station_num = '3'
+        station_num = '1'
         station = STATION_MAP.get(station_num)['station_name']
         line = STATION_MAP.get(station_num)['line_name']
         print(f'==== {station} 选择成功!')
@@ -41,7 +44,7 @@ class TicketSecKill:
     def choice_date(self):
         """选择抢票的日期"""
         # seckill_date_str = input('请输入要抢票的日期[YYYY-mm-dd]:')
-        seckill_date_str = '2021-06-22'
+        seckill_date_str = '2021-06-24'
         year, month, day = seckill_date_str.split('-')
         seckill_date = date(int(year), int(month), int(day))
         if 0 <= seckill_date.weekday() <= 4:
@@ -104,9 +107,9 @@ class TicketSecKill:
         """
         生成请求的参数
         """
-        for _ in range(42):
+        for _ in range(420):
             data = {"lineName": self.route_line, "snapshotWeekOffset": 0, "stationName": self.station,
-                "enterDate": self.seckill_date, "snapshotTimeSlot": "0700-0900", "timeSlot": self.time_slot}
+                "enterDate": self.seckill_date, "snapshotTimeSlot": "0630-0930", "timeSlot": self.time_slot}
             yield data
 
     async def _create_appointment(self):
@@ -122,10 +125,10 @@ class TicketSecKill:
                     if response.get('appointmentId'):
                         print('===抢票成功===', response)
                         break
+                print(response)
                 print('next....')
             else:
                 print('===抢票失败===')
-
 
 t = TicketSecKill()
 asyncio.get_event_loop().run_until_complete(t._create_appointment())
