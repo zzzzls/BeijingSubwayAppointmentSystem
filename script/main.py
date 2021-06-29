@@ -6,10 +6,12 @@
 
 """
 import sys
-sys.path.append('/Users/apple/Desktop/files/BeijingSubwayAppointmentSystem')
+from os.path import abspath,dirname
+sys.path.append(dirname(abspath('./')))
 
+import json
 from script.settings import *
-from datetime import date, time
+from datetime import date, timedelta
 import httpx
 import asyncio
 
@@ -44,7 +46,7 @@ class TicketSecKill:
     def choice_date(self):
         """选择抢票的日期"""
         # seckill_date_str = input('请输入要抢票的日期[YYYY-mm-dd]:')
-        seckill_date_str = '2021-06-24'
+        seckill_date_str = (date.today() + timedelta(days=1)).strftime('%Y-%m-%d') # 获取明天日期
         year, month, day = seckill_date_str.split('-')
         seckill_date = date(int(year), int(month), int(day))
         if 0 <= seckill_date.weekday() <= 4:
@@ -119,6 +121,7 @@ class TicketSecKill:
         gd = self.gen_data()
         async with httpx.AsyncClient(headers=self.headers) as async_client:
             for data in gd:
+                print(json.dumps(data))
                 r = await async_client.post(URL_MAP['CreateAppointment'], json=data)
                 if r and r.status_code == httpx.codes.ok:
                     response = r.json()
