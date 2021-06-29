@@ -7,7 +7,7 @@
 """
 import sys
 from os.path import abspath,dirname
-sys.path.append(dirname(abspath('./')))
+sys.path.append(dirname(dirname(abspath(__file__))))
 
 import json
 from script.settings import *
